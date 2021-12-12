@@ -28,7 +28,7 @@ class Tree(models.Model):
     def __str__(self):
         return f"{self.pk} / parent = {self.parent_row} / lp = {self.lp} / child = {self.row}"
 
-    def przesun_w_gore(self):
+    def move_up(self):
         if self.lp > 1:
             try:
                 el_tree = Tree.objects.get(parent_row=self.parent_row, lp=self.lp - 1)
@@ -41,7 +41,7 @@ class Tree(models.Model):
             return True
         return False
 
-    def przesun_w_dol(self):
+    def move_down(self):
         try:
             el_tree = Tree.objects.get(parent_row=self.parent_row, lp=self.lp + 1)
             el_tree.lp -= 1
@@ -53,7 +53,7 @@ class Tree(models.Model):
             pass
         return False
 
-    def przesun_powiazanie(self, dest_row_id, dest_lp):
+    def move_connection(self, dest_row_id, dest_lp):
         dest_row = Tree.objects.filter(pk=dest_row_id).first()
         node_lp_count = Tree.objects.filter(parent_row=dest_row).count()
         if dest_row:
