@@ -1,0 +1,37 @@
+{% extends 'tree/base.html' %}
+    
+    {% block title %}
+        {{ title }}
+    {% endblock %}
+    
+    {% block content %}
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>{{ title }}</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>#ID // Name</th>
+                                <th>Parent_Row #ID</th>
+                                <th>Element #ID</th>
+                                <th>Lp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for t_row in tree_rows %}
+                                {{t_row}}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <script>
+            htmx.logAll();
+        </script>
+    {% endblock %}
