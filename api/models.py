@@ -81,27 +81,29 @@ class Tree(models.Model):
             return True
         return False
     
-    def render_row(self, level=1):
+    def render_row(self, level=0, extra={}):
         expandable = False
         if Tree.objects.filter(parent_row=self.row).count() > 0:
             expandable = True
+        extraclass = extra.get("class", "")
         icon = f"""
             <span
+                class="collapseicon"
                 hx-get="/tree/expand/{self.pk}/"
                 hx-target="#expand_{str(self.pk)}"
                 hx-swap="outerHTML"
             >
-                <b>></b>
+                <i class="far fa-caret-square-right"></i>
             </span>
             """ if expandable else ""
-        indent = "&nbsp;&nbsp;&nbsp;&nbsp;" * level
         return mark_safe(f"""
-        <tr id="expand_{str(self.pk)}">
-            <td>{indent}{icon} ({self.pk}) {self.row.name}</td>
-            <td>{self.parent_row.pk if self.parent_row else None}</td>
-            <td>{self.row.pk}</td>
-            <td>{self.lp}</td>
-        </tr>
+            <div class="{extraclass} row m-{level}" id="expand_{str(self.pk)}" classes="toggle expanded:1s">
+                <input type="hidden" name="item" value="{self.pk}">
+                <div class="col">{icon} ({self.pk}) {self.row.name}</div>
+                <div class="col">{self.parent_row.pk if self.parent_row else None}</div>
+                <div class="col">{self.row.pk}</div>
+                <div class="col">{self.lp}</div>
+            </div>
         """)
 
     def to_json(self):

@@ -13,25 +13,60 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>#ID // Name</th>
-                                <th>Parent_Row #ID</th>
-                                <th>Element #ID</th>
-                                <th>Lp</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for t_row in tree_rows %}
-                                {{t_row}}
+                    <div class="htmx-indicator">
+                        <div class="spinner-grow text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                    <form hx-include=".sortable.active" hx-post="/tree/sort_us/" hx-trigger="end"/>
+                    <div class="container">
+                        <form class="sortable active">
+                            {% csrf_token %}
+                        {% for t_row in tree_rows %}
+                            {{t_row}}
                             {% endfor %}
-                        </tbody>
-                    </table>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-        <script>
+    <script>
+            var COLLAPSE_PATH = "/tree/collapse/";
+            var SORT_PATH = "/tree/sort_us/";
             htmx.logAll();
+            htmx.onLoad(function(content) {
+                var nestedSortables = document.querySelectorAll('.sortable');
+                for (var i = 0; i < nestedSortables.length; i++) {
+                new Sortable(nestedSortables[i], {
+                    group: 'nested',
+                    animation: 150,
+                    fallbackOnBody: true,
+                    ghostClass: 'blue-background-class',
+                    swapThreshold: 0.65
+                });
+                }
+            })
+            htmx.on("htmx:beforeOnLoad", () => {
+                document.querySelectorAll('form.active').forEach(form => {
+                    form.classList.remove('active');
+                });
+                console.debug("done.")
+            })
+            htmx.on("htmx:afterSwap", (evt) => {
+                if (evt.detail.pathInfo.path.includes(COLLAPSE_PATH)) {
+                    evt.target.closest('form').classList.add('active');
+                }
+            })
+            document.body.addEventListener('htmx:configRequest', function(evt) {
+                if (evt.detail.path === SORT_PATH) {
+                    const activeform = document.querySelector('form.active');
+                    const fdata = new FormData(activeform);
+                    const items = fdata.getAll("item");
+                    const parent_row = fdata.get("parent_row");
+                    evt.detail.parameters.item = items;
+                    evt.detail.parameters.parent_row = parent_row;
+                }
+            });
+
         </script>
     {% endblock %}

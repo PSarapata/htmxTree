@@ -1,0 +1,29 @@
+
+
+  div {
+    transition: all 1.2s;
+  }
+  .collapseicon ::before {
+    rotate: 90deg;
+  }
+
+  .collapseicon {
+    transition: 0.35s ease-in;
+  }
+
+  .sortable-chosen {
+    color: #000;
+    background-color: cyan;
+  }
+
+  .htmx-settling.collapsed {
+    background-color: lightcoral;
+  }
+
+  form.active {
+    background-color: goldenrod;
+  }
+
+  .htmx-settling.expanded {
+    background-color: darkseagreen;
+  }

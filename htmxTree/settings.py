@@ -31,6 +31,8 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 5000
+
 # Application definition
 
 INSTALLED_APPS = [

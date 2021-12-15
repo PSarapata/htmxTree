@@ -14,11 +14,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
-from tree.views import TreeList, expand, collapse
+from tree.views import TreeList, expand, collapse, sort_us
 
 
 urlpatterns = [
     path('', TreeList.as_view(), name='tree_list'),
     path('expand/<int:tree_id>/', expand, name='tree_expand'),
     path('collapse/<int:tree_id>/', collapse, name='tree_collapse'),
+    path('sort_us/', sort_us, name='tree_sort_us'),
 ]
